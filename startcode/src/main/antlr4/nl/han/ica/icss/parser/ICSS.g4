@@ -47,13 +47,15 @@ ASSIGNMENT_OPERATOR: ':=';
 //--- PARSER: ---
 stylesheet: (stylerule | variable_assignment)+;
 
-stylerule: (LOWER_IDENT | ID_IDENT | CLASS_IDENT) OPEN_BRACE (declaration | variable_assignment)+ CLOSE_BRACE; //ASSUMPTION: at least one declaration or variable_assignment
+stylerule: tagselector OPEN_BRACE (declaration | variable_assignment)+ CLOSE_BRACE; //ASSUMPTION: at least one declaration or variable_assignment
 
 variable_assignment: CAPITAL_IDENT ASSIGNMENT_OPERATOR value SEMICOLON;
 
 declaration: property COLON value SEMICOLON;
 
 property: LOWER_IDENT; //ASSUMPTION: only lowercase identifiers
+
+tagselector: LOWER_IDENT | ID_IDENT | CLASS_IDENT;
 
 value: colorliteral | pixelliteral | percentageliteral | booleanliteral | CAPITAL_IDENT;
 
