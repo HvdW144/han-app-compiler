@@ -1,5 +1,6 @@
 package nl.han.ica.datastructures;
 
+// NOT NEEDED, IMPLEMENT IHANSTACK USING JAVA'S BUILT-IN LINKEDLIST
 public interface IHANLinkedList<T> {
     /**
      * Adds value to the front of the list

@@ -1,5 +1,6 @@
 package nl.han.ica.datastructures;
 
+// NOT NEEDED, DONT IMPLEMENT
 public interface IHANQueue<T> {
 
     /**

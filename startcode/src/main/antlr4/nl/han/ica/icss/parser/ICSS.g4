@@ -45,5 +45,16 @@ ASSIGNMENT_OPERATOR: ':=';
 
 
 //--- PARSER: ---
-stylesheet: EOF;
+stylesheet: stylerule+;
 
+stylerule: (LOWER_IDENT | ID_IDENT | CLASS_IDENT) OPEN_BRACE declaration+ CLOSE_BRACE; //ASSUMPTION: at least one declaration
+
+declaration: property COLON value SEMICOLON;
+
+property: LOWER_IDENT; //ASSUMPTION: only lowercase identifiers
+
+value: colorliteral | pixelliteral | percentageliteral;
+
+colorliteral: COLOR;
+pixelliteral: PIXELSIZE;
+percentageliteral: PERCENTAGE;
