@@ -57,9 +57,12 @@ property: LOWER_IDENT; //ASSUMPTION: only lowercase identifiers
 
 tagselector: LOWER_IDENT | ID_IDENT | CLASS_IDENT;
 
-value: colorliteral | pixelliteral | percentageliteral | booleanliteral | CAPITAL_IDENT;
+value: expression | COLOR | PIXELSIZE | PERCENTAGE | TRUE | FALSE | CAPITAL_IDENT;
 
-colorliteral: COLOR;
-pixelliteral: PIXELSIZE;
-percentageliteral: PERCENTAGE;
-booleanliteral: TRUE | FALSE;
+expression:
+    expression MUL expression |
+    expression (PLUS | MIN) expression |
+    SCALAR |
+    PIXELSIZE |
+    PERCENTAGE |
+    CAPITAL_IDENT;
