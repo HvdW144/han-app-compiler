@@ -33,10 +33,16 @@ public class ASTListener extends ICSSBaseListener {
 		properties = new HashMap<String,String>();
 
 	}
+	/* TEMPLATE:
+	@Override
+	public void exit<parse_rule>(ICSSParser.<parse_rule>Context cxt) {
+		//Do something
+	}
+	 */
 
 	@Override
-	public void exitProperty(ICSSParser.PropertyContext cxt) {
-//		System.out.println("Testing");
+	public void exitDeclaration(ICSSParser.DeclarationContext cxt) {
+		System.out.println(cxt.getText());
 	}
 
 	public AST getAST() {
