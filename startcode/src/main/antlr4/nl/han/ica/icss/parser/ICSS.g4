@@ -67,4 +67,6 @@ expression:
     PERCENTAGE |
     CAPITAL_IDENT;
 
-ifstatement: IF BOX_BRACKET_OPEN expression BOX_BRACKET_CLOSE OPEN_BRACE (declaration | variableassignment | ifstatement)+ CLOSE_BRACE (ELSE OPEN_BRACE (declaration | variableassignment)+ CLOSE_BRACE)?;
+ifstatement: IF BOX_BRACKET_OPEN expression BOX_BRACKET_CLOSE
+                OPEN_BRACE (declaration | variableassignment | ifstatement)+ CLOSE_BRACE
+             (ELSE OPEN_BRACE (declaration | variableassignment)+ CLOSE_BRACE)?;
