@@ -45,11 +45,11 @@ ASSIGNMENT_OPERATOR: ':=';
 
 
 //--- PARSER: ---
-stylesheet: (stylerule | variable_assignment)+;
+stylesheet: (stylerule | variableassignment)+;
 
-stylerule: tagselector OPEN_BRACE (declaration | variable_assignment)+ CLOSE_BRACE; //ASSUMPTION: at least one declaration or variable_assignment
+stylerule: tagselector OPEN_BRACE (declaration | variableassignment | ifstatement)+ CLOSE_BRACE; //ASSUMPTION: at least one declaration or variableassignment
 
-variable_assignment: CAPITAL_IDENT ASSIGNMENT_OPERATOR value SEMICOLON;
+variableassignment: CAPITAL_IDENT ASSIGNMENT_OPERATOR value SEMICOLON;
 
 declaration: property COLON value SEMICOLON;
 
@@ -66,3 +66,5 @@ expression:
     PIXELSIZE |
     PERCENTAGE |
     CAPITAL_IDENT;
+
+ifstatement: IF BOX_BRACKET_OPEN expression BOX_BRACKET_CLOSE OPEN_BRACE (declaration | variableassignment | ifstatement)+ CLOSE_BRACE (ELSE OPEN_BRACE (declaration | variableassignment)+ CLOSE_BRACE)?;
