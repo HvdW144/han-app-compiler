@@ -1,8 +1,10 @@
 package nl.han.ica.icss.parser;
 
+import java.util.HashMap;
 import java.util.Stack;
 
 
+import nl.han.ica.datastructures.HANStack;
 import nl.han.ica.datastructures.IHANStack;
 import nl.han.ica.icss.ast.*;
 import nl.han.ica.icss.ast.literals.*;
@@ -23,13 +25,26 @@ public class ASTListener extends ICSSBaseListener {
 
 	//Use this to keep track of the parent nodes when recursively traversing the ast
 	private IHANStack<ASTNode> currentContainer;
+	private HashMap<String, String> properties;
 
 	public ASTListener() {
 		ast = new AST();
-		//currentContainer = new HANStack<>();
+		currentContainer = new HANStack<>();
+		properties = new HashMap<String,String>();
+
 	}
-    public AST getAST() {
-        return ast;
-    }
+
+	@Override
+	public void exitProperty(ICSSParser.PropertyContext cxt) {
+//		System.out.println("Testing");
+	}
+
+	public AST getAST() {
+		return ast;
+	}
+
+	public HashMap<String, String> getProperties() {
+		return properties;
+	}
     
 }
