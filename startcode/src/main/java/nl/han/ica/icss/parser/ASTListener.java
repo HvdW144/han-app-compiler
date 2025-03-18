@@ -25,32 +25,57 @@ public class ASTListener extends ICSSBaseListener {
 
 	//Use this to keep track of the parent nodes when recursively traversing the ast
 	private IHANStack<ASTNode> currentContainer;
-	private HashMap<String, String> properties;
 
 	public ASTListener() {
 		ast = new AST();
 		currentContainer = new HANStack<>();
-		properties = new HashMap<String,String>();
-
 	}
-	/* TEMPLATE:
-	@Override
-	public void exit<parse_rule>(ICSSParser.<parse_rule>Context cxt) {
-		//Do something
-	}
-	 */
 
 	@Override
-	public void exitDeclaration(ICSSParser.DeclarationContext cxt) {
-		System.out.println(cxt.getText());
+	public void enterStylesheet(ICSSParser.StylesheetContext ctx) {
+		currentContainer.push(new Stylesheet());
+		super.enterStylesheet(ctx);
 	}
+
+	@Override
+	public void exitStylesheet(ICSSParser.StylesheetContext ctx) {
+		ASTNode current = currentContainer.pop();
+		ast = new AST((Stylesheet) current);
+//		super.exitStylesheet(ctx); //not working?
+	}
+
+	@Override
+	public void enterStylerule(ICSSParser.StyleruleContext ctx) {
+		currentContainer.push(new Stylerule());
+		super.enterStylerule(ctx);
+	}
+
+	@Override
+	public void exitStylerule(ICSSParser.StyleruleContext ctx) {
+		ASTNode current = currentContainer.pop();
+		currentContainer.peek().addChild(current);
+		super.exitStylerule(ctx);
+	}
+
+//	@Override
+//	public void enterVariableassignment(ICSSParser.VariableassignmentContext ctx) {
+//		currentContainer.push(new VariableAssignment());
+//		super.enterVariableassignment(ctx);
+//	}
+//
+//	@Override
+//	public void exitVariableassignment(ICSSParser.VariableassignmentContext ctx) {
+//		ASTNode current = currentContainer.pop();
+//		currentContainer.peek().addChild(current);
+//		super.exitVariableassignment(ctx);
+//	}
 
 	public AST getAST() {
 		return ast;
 	}
 
-	public HashMap<String, String> getProperties() {
-		return properties;
+	public HashMap<String, String> getVariables() {
+		return variables;
 	}
     
 }
