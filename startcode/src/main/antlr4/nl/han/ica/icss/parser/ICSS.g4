@@ -49,15 +49,13 @@ stylesheet: (stylerule | variableassignment)+;
 
 stylerule: tagselector OPEN_BRACE (declaration | variableassignment | ifstatement)+ CLOSE_BRACE; //ASSUMPTION: at least one declaration or variableassignment
 
-variableassignment: CAPITAL_IDENT ASSIGNMENT_OPERATOR value SEMICOLON;
+variableassignment: CAPITAL_IDENT ASSIGNMENT_OPERATOR (literal | expression) SEMICOLON;
 
-declaration: property COLON value SEMICOLON;
+declaration: property COLON (literal | expression) SEMICOLON;
 
 property: LOWER_IDENT; //ASSUMPTION: only lowercase identifiers
 
 tagselector: LOWER_IDENT | ID_IDENT | CLASS_IDENT;
-
-value: expression | COLOR | PIXELSIZE | PERCENTAGE | TRUE | FALSE | CAPITAL_IDENT;
 
 expression:
     expression MUL expression |
@@ -70,3 +68,11 @@ expression:
 ifstatement: IF BOX_BRACKET_OPEN expression BOX_BRACKET_CLOSE
                 OPEN_BRACE (declaration | variableassignment | ifstatement)+ CLOSE_BRACE
              (ELSE OPEN_BRACE (declaration | variableassignment)+ CLOSE_BRACE)?;
+
+boolLiteral: TRUE  | FALSE;
+pixelLiteral: PIXELSIZE;
+percentageLiteral: PERCENTAGE;
+scalarLiteral: SCALAR;
+colorLiteral: COLOR;
+
+literal: boolLiteral | pixelLiteral | percentageLiteral | scalarLiteral | colorLiteral | CAPITAL_IDENT;
