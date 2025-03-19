@@ -57,19 +57,9 @@ public class ASTListener extends ICSSBaseListener {
 		super.exitStylerule(ctx);
 	}
 
-	@Override
-	public void enterTagSelector(ICSSParser.TagSelectorContext ctx) {
-		currentContainer.push(new TagSelector(ctx.getText()));
-		super.enterTagSelector(ctx);
-	}
+	//--------------Variables--------------
 
-	@Override
-	public void exitTagSelector(ICSSParser.TagSelectorContext ctx) {
-		ASTNode current = currentContainer.pop();
-		currentContainer.peek().addChild(current);
-		super.exitTagSelector(ctx);
-	}
-
+	//--------------Declarations--------------
 	@Override
 	public void enterDeclaration(ICSSParser.DeclarationContext ctx) {
 		currentContainer.push(new Declaration());
@@ -96,6 +86,50 @@ public class ASTListener extends ICSSBaseListener {
 		super.exitPropertyName(ctx);
 	}
 
+	//--------------Selectors--------------
+	@Override
+	public void enterTagSelector(ICSSParser.TagSelectorContext ctx) {
+		currentContainer.push(new TagSelector(ctx.getText()));
+		super.enterTagSelector(ctx);
+	}
+
+	@Override
+	public void exitTagSelector(ICSSParser.TagSelectorContext ctx) {
+		ASTNode current = currentContainer.pop();
+		currentContainer.peek().addChild(current);
+		super.exitTagSelector(ctx);
+	}
+
+	@Override
+	public void enterClassSelector(ICSSParser.ClassSelectorContext ctx) {
+		currentContainer.push(new ClassSelector(ctx.getText()));
+		super.enterClassSelector(ctx);
+	}
+
+	@Override
+	public void exitClassSelector(ICSSParser.ClassSelectorContext ctx) {
+		ASTNode current = currentContainer.pop();
+		currentContainer.peek().addChild(current);
+		super.exitClassSelector(ctx);
+	}
+
+	@Override
+	public void enterIdSelector(ICSSParser.IdSelectorContext ctx) {
+		currentContainer.push(new IdSelector(ctx.getText()));
+		super.enterIdSelector(ctx);
+	}
+
+	@Override
+	public void exitIdSelector(ICSSParser.IdSelectorContext ctx) {
+		ASTNode current = currentContainer.pop();
+		currentContainer.peek().addChild(current);
+		super.exitIdSelector(ctx);
+	}
+
+	//--------------Expressions--------------
+
+	//--------------IF support--------------
+
 	//--------------Literals--------------
 	// literal itself is not handled, as all it's children are handled (predefined by startcode)
 
@@ -112,19 +146,57 @@ public class ASTListener extends ICSSBaseListener {
 		super.exitBoolLiteral(ctx);
 	}
 
+	@Override
+	public void enterPixelLiteral(ICSSParser.PixelLiteralContext ctx) {
+		currentContainer.push(new PixelLiteral(ctx.getText()));
+		super.enterPixelLiteral(ctx);
+	}
 
-//	@Override
-//	public void enterVariableassignment(ICSSParser.VariableassignmentContext ctx) {
-//		currentContainer.push(new VariableAssignment());
-//		super.enterVariableassignment(ctx);
-//	}
-//
-//	@Override
-//	public void exitVariableassignment(ICSSParser.VariableassignmentContext ctx) {
-//		ASTNode current = currentContainer.pop();
-//		currentContainer.peek().addChild(current);
-//		super.exitVariableassignment(ctx);
-//	}
+	@Override
+	public void exitPixelLiteral(ICSSParser.PixelLiteralContext ctx) {
+		ASTNode current = currentContainer.pop();
+		currentContainer.peek().addChild(current);
+		super.exitPixelLiteral(ctx);
+	}
+
+	@Override
+	public void enterPercentageLiteral(ICSSParser.PercentageLiteralContext ctx) {
+		currentContainer.push(new PercentageLiteral(ctx.getText()));
+		super.enterPercentageLiteral(ctx);
+	}
+
+	@Override
+	public void exitPercentageLiteral(ICSSParser.PercentageLiteralContext ctx) {
+		ASTNode current = currentContainer.pop();
+		currentContainer.peek().addChild(current);
+		super.exitPercentageLiteral(ctx);
+	}
+
+	@Override
+	public void enterScalarLiteral(ICSSParser.ScalarLiteralContext ctx) {
+		currentContainer.push(new ScalarLiteral(ctx.getText()));
+		super.enterScalarLiteral(ctx);
+	}
+
+	@Override
+	public void exitScalarLiteral(ICSSParser.ScalarLiteralContext ctx) {
+		ASTNode current = currentContainer.pop();
+		currentContainer.peek().addChild(current);
+		super.exitScalarLiteral(ctx);
+	}
+
+	@Override
+	public void enterColorLiteral(ICSSParser.ColorLiteralContext ctx) {
+		currentContainer.push(new ColorLiteral(ctx.getText()));
+		super.enterColorLiteral(ctx);
+	}
+
+	@Override
+	public void exitColorLiteral(ICSSParser.ColorLiteralContext ctx) {
+		ASTNode current = currentContainer.pop();
+		currentContainer.peek().addChild(current);
+		super.exitColorLiteral(ctx);
+	}
 
 	public AST getAST() {
 		return ast;
