@@ -57,6 +57,47 @@ public class ASTListener extends ICSSBaseListener {
 		super.exitStylerule(ctx);
 	}
 
+	@Override
+	public void enterTagselector(ICSSParser.TagselectorContext ctx) {
+		currentContainer.push(new TagSelector(ctx.getText()));
+		super.enterTagselector(ctx);
+	}
+
+	@Override
+	public void exitTagselector(ICSSParser.TagselectorContext ctx) {
+		ASTNode current = currentContainer.pop();
+		currentContainer.peek().addChild(current);
+		super.exitTagselector(ctx);
+	}
+
+	@Override
+	public void enterDeclaration(ICSSParser.DeclarationContext ctx) {
+		currentContainer.push(new Declaration());
+		super.enterDeclaration(ctx);
+	}
+
+	@Override
+	public void exitDeclaration(ICSSParser.DeclarationContext ctx) {
+		ASTNode current = currentContainer.pop();
+		currentContainer.peek().addChild(current);
+		super.exitDeclaration(ctx);
+	}
+
+	@Override
+	public void enterProperty(ICSSParser.PropertyContext ctx) {
+		currentContainer.push(new PropertyName(ctx.getText()));
+		super.enterProperty(ctx);
+	}
+
+	@Override
+	public void exitProperty(ICSSParser.PropertyContext ctx) {
+		ASTNode current = currentContainer.pop();
+		currentContainer.peek().addChild(current);
+		super.exitProperty(ctx);
+	}
+
+
+
 //	@Override
 //	public void enterVariableassignment(ICSSParser.VariableassignmentContext ctx) {
 //		currentContainer.push(new VariableAssignment());
@@ -73,9 +114,4 @@ public class ASTListener extends ICSSBaseListener {
 	public AST getAST() {
 		return ast;
 	}
-
-	public HashMap<String, String> getVariables() {
-		return variables;
-	}
-    
 }
