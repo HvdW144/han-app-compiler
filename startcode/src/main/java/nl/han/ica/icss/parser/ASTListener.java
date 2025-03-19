@@ -58,16 +58,16 @@ public class ASTListener extends ICSSBaseListener {
 	}
 
 	@Override
-	public void enterTagselector(ICSSParser.TagselectorContext ctx) {
+	public void enterTagSelector(ICSSParser.TagSelectorContext ctx) {
 		currentContainer.push(new TagSelector(ctx.getText()));
-		super.enterTagselector(ctx);
+		super.enterTagSelector(ctx);
 	}
 
 	@Override
-	public void exitTagselector(ICSSParser.TagselectorContext ctx) {
+	public void exitTagSelector(ICSSParser.TagSelectorContext ctx) {
 		ASTNode current = currentContainer.pop();
 		currentContainer.peek().addChild(current);
-		super.exitTagselector(ctx);
+		super.exitTagSelector(ctx);
 	}
 
 	@Override
@@ -84,18 +84,33 @@ public class ASTListener extends ICSSBaseListener {
 	}
 
 	@Override
-	public void enterProperty(ICSSParser.PropertyContext ctx) {
+	public void enterPropertyName(ICSSParser.PropertyNameContext ctx) {
 		currentContainer.push(new PropertyName(ctx.getText()));
-		super.enterProperty(ctx);
+		super.enterPropertyName(ctx);
 	}
 
 	@Override
-	public void exitProperty(ICSSParser.PropertyContext ctx) {
+	public void exitPropertyName(ICSSParser.PropertyNameContext ctx) {
 		ASTNode current = currentContainer.pop();
 		currentContainer.peek().addChild(current);
-		super.exitProperty(ctx);
+		super.exitPropertyName(ctx);
 	}
 
+	//--------------Literals--------------
+	// literal itself is not handled, as all it's children are handled (predefined by startcode)
+
+	@Override
+	public void enterBoolLiteral(ICSSParser.BoolLiteralContext ctx) {
+		currentContainer.push(new BoolLiteral(ctx.getText()));
+		super.enterBoolLiteral(ctx);
+	}
+
+	@Override
+	public void exitBoolLiteral(ICSSParser.BoolLiteralContext ctx) {
+		ASTNode current = currentContainer.pop();
+		currentContainer.peek().addChild(current);
+		super.exitBoolLiteral(ctx);
+	}
 
 
 //	@Override

@@ -45,18 +45,26 @@ ASSIGNMENT_OPERATOR: ':=';
 
 
 //--- PARSER: ---
-stylesheet: (stylerule | variableassignment)+;
+stylesheet: (stylerule | variableAssignment)+;
 
-stylerule: tagselector OPEN_BRACE (declaration | variableassignment | ifstatement)+ CLOSE_BRACE; //ASSUMPTION: at least one declaration or variableassignment
+stylerule: selector OPEN_BRACE (declaration | variableAssignment | ifClause)+ CLOSE_BRACE; //ASSUMPTION: at least one declaration or variableAssignment
 
-variableassignment: CAPITAL_IDENT ASSIGNMENT_OPERATOR (literal | expression) SEMICOLON;
+//--------------Variables--------------
+variableAssignment: CAPITAL_IDENT ASSIGNMENT_OPERATOR (literal | expression) SEMICOLON;
 
-declaration: property COLON (literal | expression) SEMICOLON;
+//--------------Declarations--------------
+declaration: propertyName COLON (literal | expression) SEMICOLON;
 
-property: LOWER_IDENT; //ASSUMPTION: only lowercase identifiers
+propertyName: LOWER_IDENT; //ASSUMPTION: only lowercase identifiers
 
-tagselector: LOWER_IDENT | ID_IDENT | CLASS_IDENT;
+//--------------Selectors--------------
+selector: tagSelector | classSelector | idSelector;
 
+tagSelector: LOWER_IDENT;
+classSelector: CLASS_IDENT;
+idSelector: ID_IDENT;
+
+//--------------Expressions--------------
 expression:
     expression MUL expression |
     expression (PLUS | MIN) expression |
@@ -65,9 +73,14 @@ expression:
     PERCENTAGE |
     CAPITAL_IDENT;
 
-ifstatement: IF BOX_BRACKET_OPEN expression BOX_BRACKET_CLOSE
-                OPEN_BRACE (declaration | variableassignment | ifstatement)+ CLOSE_BRACE
-             (ELSE OPEN_BRACE (declaration | variableassignment)+ CLOSE_BRACE)?;
+//--------------IF support--------------
+ifClause: IF BOX_BRACKET_OPEN expression BOX_BRACKET_CLOSE
+                OPEN_BRACE (declaration | variableAssignment | ifClause)+ CLOSE_BRACE
+             elseClause?;
+elseClause: ELSE OPEN_BRACE (declaration | variableAssignment)+ CLOSE_BRACE;
+
+//--------------Literals--------------
+literal: boolLiteral | pixelLiteral | percentageLiteral | scalarLiteral | colorLiteral | CAPITAL_IDENT;
 
 boolLiteral: TRUE  | FALSE;
 pixelLiteral: PIXELSIZE;
@@ -75,4 +88,4 @@ percentageLiteral: PERCENTAGE;
 scalarLiteral: SCALAR;
 colorLiteral: COLOR;
 
-literal: boolLiteral | pixelLiteral | percentageLiteral | scalarLiteral | colorLiteral | CAPITAL_IDENT;
+
