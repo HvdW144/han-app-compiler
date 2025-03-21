@@ -2,3 +2,18 @@
     -fx-text-fill: #ff0000;
     -fx-font-weight: bold;
 }
+
+.root {
+    -fx-base: #2b2b2b;
+    -fx-background: #1e1e1e;
+    -fx-text-fill: #ffffff;
+}
+
+.button {
+    -fx-background-color: #3c3f41;
+    -fx-text-fill: white;
+}
+
+.label {
+    -fx-text-fill: white;
+}
