@@ -58,18 +58,33 @@ public class ASTListener extends ICSSBaseListener {
 	}
 
 	//--------------Variables--------------
-//	@Override
-//	public void enterVariableAssignment(ICSSParser.VariableAssignmentContext ctx) {
-//		currentContainer.push(new VariableAssignment());
-//		super.enterVariableAssignment(ctx);
-//	}
-//
-//	@Override
-//	public void exitVariableAssignment(ICSSParser.VariableAssignmentContext ctx) {
-//		ASTNode current = currentContainer.pop();
-//		currentContainer.peek().addChild(current);
-//		super.exitVariableAssignment(ctx);
-//	}
+	@Override
+	public void enterVariableAssignment(ICSSParser.VariableAssignmentContext ctx) {
+		currentContainer.push(new VariableAssignment());
+		super.enterVariableAssignment(ctx);
+	}
+
+	@Override
+	public void exitVariableAssignment(ICSSParser.VariableAssignmentContext ctx) {
+		ASTNode current = currentContainer.pop();
+		currentContainer.peek().addChild(current);
+//		properties.put(cxt.getChild(0).getText(), cxt.getChild(2).getText());
+
+		super.exitVariableAssignment(ctx);
+	}
+
+	@Override
+	public void enterVariableReference(ICSSParser.VariableReferenceContext ctx) {
+		currentContainer.push(new VariableReference(ctx.getText()));
+		super.enterVariableReference(ctx);
+	}
+
+	@Override
+	public void exitVariableReference(ICSSParser.VariableReferenceContext ctx) {
+		ASTNode current = currentContainer.pop();
+		currentContainer.peek().addChild(current);
+		super.exitVariableReference(ctx);
+	}
 
 	//--------------Declarations--------------
 	@Override

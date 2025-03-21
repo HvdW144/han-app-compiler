@@ -50,7 +50,8 @@ stylesheet: (stylerule | variableAssignment)+;
 stylerule: selector OPEN_BRACE (declaration | variableAssignment | ifClause)+ CLOSE_BRACE; //ASSUMPTION: at least one declaration or variableAssignment
 
 //--------------Variables--------------
-variableAssignment: CAPITAL_IDENT ASSIGNMENT_OPERATOR (literal | expression) SEMICOLON;
+variableAssignment: variableReference ASSIGNMENT_OPERATOR (literal | expression) SEMICOLON;
+variableReference: CAPITAL_IDENT;
 
 //--------------Declarations--------------
 declaration: propertyName COLON (literal | expression) SEMICOLON;
@@ -71,7 +72,7 @@ expression:
     SCALAR |
     PIXELSIZE |
     PERCENTAGE |
-    CAPITAL_IDENT;
+    variableReference;
 
 //--------------IF support--------------
 ifClause: IF BOX_BRACKET_OPEN expression BOX_BRACKET_CLOSE
@@ -80,7 +81,7 @@ ifClause: IF BOX_BRACKET_OPEN expression BOX_BRACKET_CLOSE
 elseClause: ELSE OPEN_BRACE (declaration | variableAssignment)+ CLOSE_BRACE;
 
 //--------------Literals--------------
-literal: boolLiteral | pixelLiteral | percentageLiteral | scalarLiteral | colorLiteral | CAPITAL_IDENT;
+literal: boolLiteral | pixelLiteral | percentageLiteral | scalarLiteral | colorLiteral | variableReference;
 
 boolLiteral: TRUE  | FALSE;
 pixelLiteral: PIXELSIZE;
