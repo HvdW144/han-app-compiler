@@ -176,6 +176,31 @@ public class ASTListener extends ICSSBaseListener {
 	}
 
 	//--------------IF support--------------
+	@Override
+	public void enterIfClause(ICSSParser.IfClauseContext ctx) {
+		currentContainer.push(new IfClause());
+		super.enterIfClause(ctx);
+	}
+
+	@Override
+	public void exitIfClause(ICSSParser.IfClauseContext ctx) {
+		ASTNode current = currentContainer.pop();
+		currentContainer.peek().addChild(current);
+		super.exitIfClause(ctx);
+	}
+
+	@Override
+	public void enterElseClause(ICSSParser.ElseClauseContext ctx) {
+		currentContainer.push(new ElseClause());
+		super.enterElseClause(ctx);
+	}
+
+	@Override
+	public void exitElseClause(ICSSParser.ElseClauseContext ctx) {
+		ASTNode current = currentContainer.pop();
+		currentContainer.peek().addChild(current);
+		super.exitElseClause(ctx);
+	}
 
 	//--------------Literals--------------
 	// literal itself is not handled, as all it's children are handled (predefined by startcode)
