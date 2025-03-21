@@ -68,8 +68,6 @@ public class ASTListener extends ICSSBaseListener {
 	public void exitVariableAssignment(ICSSParser.VariableAssignmentContext ctx) {
 		ASTNode current = currentContainer.pop();
 		currentContainer.peek().addChild(current);
-//		properties.put(cxt.getChild(0).getText(), cxt.getChild(2).getText());
-
 		super.exitVariableAssignment(ctx);
 	}
 
@@ -154,6 +152,28 @@ public class ASTListener extends ICSSBaseListener {
 	}
 
 	//--------------Expressions--------------
+	@Override
+	public void enterExpression(ICSSParser.ExpressionContext ctx) {
+		if(ctx.getChildCount() == 1) {
+			return;
+		}
+		if(ctx.getChild(1).getText().equals("+")) {
+			currentContainer.push(new AddOperation());
+		} else if(ctx.getChild(1).getText().equals("-")) {
+			currentContainer.push(new SubtractOperation());
+		} else if(ctx.getChild(1).getText().equals("*")) {
+			currentContainer.push(new MultiplyOperation());
+		}
+	}
+
+	@Override
+	public void exitExpression(ICSSParser.ExpressionContext ctx) {
+		if(ctx.getChildCount() == 1) {
+			return;
+		}
+		ASTNode current = currentContainer.pop();
+		currentContainer.peek().addChild(current);
+	}
 
 	//--------------IF support--------------
 

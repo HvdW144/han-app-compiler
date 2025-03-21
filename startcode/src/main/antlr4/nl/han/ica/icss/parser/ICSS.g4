@@ -69,9 +69,9 @@ idSelector: ID_IDENT;
 expression:
     expression MUL expression |
     expression (PLUS | MIN) expression |
-    SCALAR |
-    PIXELSIZE |
-    PERCENTAGE |
+    scalarLiteral |
+    pixelLiteral |
+    percentageLiteral |
     variableReference;
 
 //--------------IF support--------------
