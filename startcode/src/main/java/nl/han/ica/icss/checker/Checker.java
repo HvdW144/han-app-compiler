@@ -21,7 +21,9 @@ public class Checker {
     }
 
     private void checkNode(ASTNode node) {
-        if (node instanceof Stylerule) {
+        if (node instanceof Stylesheet) {
+            checkStylesheet((Stylesheet) node);
+        } else if (node instanceof Stylerule) {
             checkStylerule((Stylerule) node);
         } else if (node instanceof VariableAssignment) {
             checkVariableAssignment((VariableAssignment) node);
@@ -38,8 +40,16 @@ public class Checker {
         }
     }
 
+    private void checkStylesheet(Stylesheet node) {
+        for (ASTNode child : node.getChildren()) {
+            checkNode(child);
+        }
+    }
+
     private void checkStylerule(Stylerule node) {
-        throw new UnsupportedOperationException("Not implemented");
+        for (ASTNode child : node.getChildren()) {
+            checkNode(child);
+        }
     }
 
     private void checkVariableAssignment(VariableAssignment node) {
