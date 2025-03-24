@@ -7,11 +7,13 @@ import nl.han.ica.icss.ast.selectors.IdSelector;
 import nl.han.ica.icss.ast.selectors.TagSelector;
 import nl.han.ica.icss.ast.types.ExpressionType;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 
 
 public class Checker {
+    private static final String[] PROPERTIES = new String[]{"width", "height", "color", "background-color"};
 
     // teacher said we could use a normal linked list for this, so I changed it
     private LinkedList<HashMap<String, ExpressionType>> variableTypes;
@@ -36,12 +38,16 @@ public class Checker {
             checkVariableReference((VariableReference) node);
         } else if (node instanceof Declaration) {
             checkDeclaration((Declaration) node);
+        } else if (node instanceof PropertyName) {
+            checkPropertyName((PropertyName) node);
         } else if (node instanceof Operation) {
             checkOperation((Operation) node);
         } else if (node instanceof IfClause) {
             checkIfClause((IfClause) node);
         } else if (node instanceof Selector) {
             checkSelectorNode((Selector) node);
+        } else if (node instanceof Literal) {
+            checkLiteralNode((Literal) node);
         } else {
             System.out.println("Unknown node type: " + node.getClass().getName());
         }
@@ -56,6 +62,22 @@ public class Checker {
             checkIdSelector((IdSelector) node);
         } else {
             System.out.println("Unknown selector type: " + node.getClass().getName());
+        }
+    }
+
+    private void checkLiteralNode(Literal node) {
+        if (node instanceof PixelLiteral) {
+            checkPixelLiteral((PixelLiteral) node);
+        } else if (node instanceof PercentageLiteral) {
+            checkPercentageLiteral((PercentageLiteral) node);
+        } else if (node instanceof ColorLiteral) {
+            checkColorLiteral((ColorLiteral) node);
+        } else if (node instanceof ScalarLiteral) {
+            checkScalarLiteral((ScalarLiteral) node);
+        } else if (node instanceof BoolLiteral) {
+            checkBoolLiteral((BoolLiteral) node);
+        } else {
+            System.out.println("Unknown literal type: " + node.getClass().getName());
         }
     }
 
@@ -93,10 +115,13 @@ public class Checker {
 
     //--------------Declarations--------------
     private void checkDeclaration(Declaration node) {
-        if (variableTypes.stream().noneMatch(scope -> scope.containsKey(node.property.name))) {
-            System.out.println("Property " + node.property.name + " not declared");
-        }
         checkChildNodes(node);
+    }
+
+    private void checkPropertyName(PropertyName node) {
+        if (Arrays.stream(PROPERTIES).noneMatch(property -> property.equals(node.name))) {
+            System.out.println("Unknown property " + node.name);
+        }
     }
 
     //--------------Selectors--------------
@@ -123,6 +148,27 @@ public class Checker {
     }
 
     //--------------Literals--------------
+    private void checkBoolLiteral(BoolLiteral node) {
+        //skip
+    }
+
+    private void checkPixelLiteral(PixelLiteral node) {
+        //skip
+    }
+
+    private void checkPercentageLiteral(PercentageLiteral node) {
+        //skip
+    }
+
+    private void checkScalarLiteral(ScalarLiteral node) {
+        //skip
+    }
+
+    private void checkColorLiteral(ColorLiteral node) {
+        //skip
+    }
+
+    //--------------Helpers--------------
 
     /**
      * Returns the type of the given expression.
