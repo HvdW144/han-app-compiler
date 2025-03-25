@@ -44,6 +44,8 @@ public class Checker {
             checkOperation((Operation) node);
         } else if (node instanceof IfClause) {
             checkIfClause((IfClause) node);
+        } else if (node instanceof ElseClause) {
+            checkElseClause((ElseClause) node);
         } else if (node instanceof Selector) {
             checkSelectorNode((Selector) node);
         } else if (node instanceof Literal) {
@@ -90,7 +92,9 @@ public class Checker {
     private void checkStylesheet(Stylesheet node) {
         //add scope
         variableTypes.add(new HashMap<>());
+
         checkChildNodes(node);
+
         //remove scope
         variableTypes.removeLast();
     }
@@ -98,7 +102,9 @@ public class Checker {
     private void checkStylerule(Stylerule node) {
         //add scope
         variableTypes.add(new HashMap<>());
+
         checkChildNodes(node);
+
         //remove scope
         variableTypes.removeLast();
     }
@@ -107,12 +113,11 @@ public class Checker {
     private void checkVariableAssignment(VariableAssignment node) {
         variableTypes.getLast().put(node.name.name, getVariableType(node.expression));
         checkChildNodes(node);
-        System.out.println(variableTypes);
     }
 
     private void checkVariableReference(VariableReference node) {
         if (variableTypes.stream().noneMatch(scope -> scope.containsKey(node.name))) {
-            System.out.println("Variable " + node.name + " not declared");
+            node.setError("Variable " + node.name + " not declared");
         }
         checkChildNodes(node);
     }
@@ -124,7 +129,7 @@ public class Checker {
 
     private void checkPropertyName(PropertyName node) {
         if (Arrays.stream(PROPERTIES).noneMatch(property -> property.equals(node.name))) {
-            System.out.println("Unknown property " + node.name);
+            node.setError("Unknown property " + node.name);
         }
     }
 
@@ -143,15 +148,37 @@ public class Checker {
 
     //--------------Expressions--------------
     private void checkOperation(Operation node) {
-        throw new UnsupportedOperationException("Not implemented");
+        checkChildNodes(node);
     }
 
     //--------------IF support--------------
     private void checkIfClause(IfClause node) {
         //add scope
         variableTypes.add(new HashMap<>());
-        System.out.println(node);
+
+        if (!(node.conditionalExpression instanceof BoolLiteral)) {
+            if (node.conditionalExpression instanceof VariableReference) {
+                if (variableTypes.stream().noneMatch(scope -> scope.containsKey(((VariableReference) node.conditionalExpression).name))) {
+                    node.setError("Variable " + ((VariableReference) node.conditionalExpression).name + " not declared");
+                } else if (variableTypes.stream().noneMatch(scope -> scope.get(((VariableReference) node.conditionalExpression).name) == ExpressionType.BOOL)) {
+                    node.setError("Variable " + ((VariableReference) node.conditionalExpression).name + " is not a boolean");
+                }
+            } else {
+                node.setError("Conditional expression is not a boolean");
+            }
+        }
         checkChildNodes(node);
+
+        //remove scope
+        variableTypes.removeLast();
+    }
+
+    private void checkElseClause(ElseClause node) {
+        //add scope
+        variableTypes.add(new HashMap<>());
+
+        checkChildNodes(node);
+
         //remove scope
         variableTypes.removeLast();
     }
