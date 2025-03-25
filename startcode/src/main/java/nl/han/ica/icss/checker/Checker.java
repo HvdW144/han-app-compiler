@@ -88,14 +88,18 @@ public class Checker {
     }
 
     private void checkStylesheet(Stylesheet node) {
+        //add scope
         variableTypes.add(new HashMap<>());
         checkChildNodes(node);
+        //remove scope
         variableTypes.removeLast();
     }
 
     private void checkStylerule(Stylerule node) {
+        //add scope
         variableTypes.add(new HashMap<>());
         checkChildNodes(node);
+        //remove scope
         variableTypes.removeLast();
     }
 
@@ -144,7 +148,12 @@ public class Checker {
 
     //--------------IF support--------------
     private void checkIfClause(IfClause node) {
-        throw new UnsupportedOperationException("Not implemented");
+        //add scope
+        variableTypes.add(new HashMap<>());
+        System.out.println(node);
+        checkChildNodes(node);
+        //remove scope
+        variableTypes.removeLast();
     }
 
     //--------------Literals--------------
