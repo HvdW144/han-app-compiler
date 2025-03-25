@@ -72,7 +72,8 @@ expression:
     scalarLiteral |
     pixelLiteral |
     percentageLiteral |
-    variableReference;
+    variableReference |
+    boolLiteral;
 
 //--------------IF support--------------
 ifClause: IF BOX_BRACKET_OPEN expression BOX_BRACKET_CLOSE
