@@ -148,6 +148,7 @@ public class Checker {
 
     //--------------Expressions--------------
     private void checkOperation(Operation node) {
+        //TODO: check operand types
         checkChildNodes(node);
     }
 
