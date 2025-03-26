@@ -9,18 +9,19 @@ import nl.han.ica.icss.ast.types.ExpressionType;
 
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.ListIterator;
 
 public class ExpressionTypeHelper {
     /**
      * Returns the type of the given expression.
      *
-     * @param expression The expression to get the type of.
+     * @param expression    The expression to get the type of.
      * @param variableTypes The variable types to use when determining the type of a variable reference.
      * @see Expression
      */
     public ExpressionType getVariableType(Expression expression, LinkedList<HashMap<String, ExpressionType>> variableTypes) {
         if (expression instanceof VariableReference) {
-            return variableTypes.getLast().get(((VariableReference) expression).name);
+            return findVariableTypeOfReference((VariableReference) expression, variableTypes);
         } else if (expression instanceof Operation) {
             return getOperationType((Operation) expression);
         } else if (expression instanceof Literal) {
@@ -54,5 +55,18 @@ public class ExpressionTypeHelper {
         }
 
         throw new UnsupportedOperationException("Unknown literal type: " + literal.getClass().getName());
+    }
+
+    private ExpressionType findVariableTypeOfReference(VariableReference variableReference, LinkedList<HashMap<String, ExpressionType>> variableTypes) {
+        ListIterator<HashMap<String, ExpressionType>> iterator = variableTypes.listIterator(variableTypes.size());
+
+
+        while (iterator.hasPrevious()) {
+            HashMap<String, ExpressionType> currentScope = iterator.previous();
+            if (currentScope.containsKey(variableReference.name)) {
+                return currentScope.get(variableReference.name);
+            }
+        }
+        return null;
     }
 }

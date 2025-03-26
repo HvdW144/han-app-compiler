@@ -152,7 +152,12 @@ public class Checker {
     //--------------Expressions--------------
     private void checkOperation(Operation node) {
         //TODO: might break on chained operations
-        if (node.lhs instanceof Literal && node.rhs instanceof Literal) {
+        if ((node.lhs instanceof Literal || node.lhs instanceof VariableReference) && (node.rhs instanceof Literal || node.rhs instanceof VariableReference)) {
+            //check if no colors are used in operations
+            if (node.lhs instanceof ColorLiteral || node.rhs instanceof ColorLiteral) {
+                node.setError("Operations with colors are not allowed");
+            }
+
             if (!(node instanceof MultiplyOperation)) {
                 if (expressionTypeHelper.getVariableType(node.lhs, variableTypes) != expressionTypeHelper.getVariableType(node.rhs, variableTypes)) {
                     node.setError("Operation between different types");
