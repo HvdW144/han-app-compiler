@@ -192,10 +192,10 @@ public class Checker {
 
         if (!(node.conditionalExpression instanceof BoolLiteral)) {
             if (node.conditionalExpression instanceof VariableReference) {
-                if (variableTypes.stream().noneMatch(scope -> scope.containsKey(((VariableReference) node.conditionalExpression).name))) {
-                    node.setError("Variable " + ((VariableReference) node.conditionalExpression).name + " not declared");
-                } else if (variableTypes.stream().noneMatch(scope -> scope.get(((VariableReference) node.conditionalExpression).name) == ExpressionType.BOOL)) {
-                    node.setError("Variable " + ((VariableReference) node.conditionalExpression).name + " is not a boolean");
+                if (variableTypes.stream().anyMatch(scope -> scope.containsKey(((VariableReference) node.conditionalExpression).name))) {
+                    if (variableTypes.stream().noneMatch(scope -> scope.get(((VariableReference) node.conditionalExpression).name) == ExpressionType.BOOL)) {
+                        node.setError("Variable " + ((VariableReference) node.conditionalExpression).name + " is not a boolean");
+                    }
                 }
             } else {
                 node.setError("Conditional expression is not a boolean");
