@@ -151,23 +151,38 @@ public class Checker {
 
     //--------------Expressions--------------
     private void checkOperation(Operation node) {
+        checkChildNodes(node);
+
         //TODO: might break on chained operations
         if ((node.lhs instanceof Literal || node.lhs instanceof VariableReference) && (node.rhs instanceof Literal || node.rhs instanceof VariableReference)) {
             //check if no colors are used in operations
             if (node.lhs instanceof ColorLiteral || node.rhs instanceof ColorLiteral) {
                 node.setError("Operations with colors are not allowed");
+                return;
+            }
+            if (node.lhs instanceof VariableReference) {
+                if (expressionTypeHelper.findVariableTypeOfReference((VariableReference) node.lhs, variableTypes) == ExpressionType.COLOR) {
+                    node.setError("Operations with colors are not allowed");
+                    return;
+                }
+            }
+            if (node.rhs instanceof VariableReference) {
+                if (expressionTypeHelper.findVariableTypeOfReference((VariableReference) node.rhs, variableTypes) == ExpressionType.COLOR) {
+                    node.setError("Operations with colors are not allowed");
+                    return;
+                }
             }
 
+            //check if multiply operations contain at least one scalar
             if (!(node instanceof MultiplyOperation)) {
                 if (expressionTypeHelper.getVariableType(node.lhs, variableTypes) != expressionTypeHelper.getVariableType(node.rhs, variableTypes)) {
+                    //TODO: gives double errors
                     node.setError("Operation between different types");
                 }
             } else if (!(node.lhs instanceof ScalarLiteral || node.rhs instanceof ScalarLiteral)) {
                 node.setError("Multiply operations should contain at least one scalar");
             }
         }
-
-        checkChildNodes(node);
     }
 
     //--------------IF support--------------

@@ -57,7 +57,7 @@ public class ExpressionTypeHelper {
         throw new UnsupportedOperationException("Unknown literal type: " + literal.getClass().getName());
     }
 
-    private ExpressionType findVariableTypeOfReference(VariableReference variableReference, LinkedList<HashMap<String, ExpressionType>> variableTypes) {
+    public ExpressionType findVariableTypeOfReference(VariableReference variableReference, LinkedList<HashMap<String, ExpressionType>> variableTypes) {
         ListIterator<HashMap<String, ExpressionType>> iterator = variableTypes.listIterator(variableTypes.size());
 
 
