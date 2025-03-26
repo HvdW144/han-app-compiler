@@ -15,6 +15,7 @@ public class ExpressionTypeHelper {
      * Returns the type of the given expression.
      *
      * @param expression The expression to get the type of.
+     * @param variableTypes The variable types to use when determining the type of a variable reference.
      * @see Expression
      */
     public ExpressionType getVariableType(Expression expression, LinkedList<HashMap<String, ExpressionType>> variableTypes) {
