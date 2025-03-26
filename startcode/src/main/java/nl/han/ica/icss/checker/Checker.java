@@ -18,6 +18,8 @@ public class Checker {
     // teacher said we could use a normal linked list for this, so I changed it
     private LinkedList<HashMap<String, ExpressionType>> variableTypes;
 
+    private final ExpressionTypeHelper expressionTypeHelper = new ExpressionTypeHelper();
+
     public void check(AST ast) {
         // clean up the variableTypes list
         variableTypes = new LinkedList<>();
@@ -111,7 +113,7 @@ public class Checker {
 
     //--------------Variables--------------
     private void checkVariableAssignment(VariableAssignment node) {
-        variableTypes.getLast().put(node.name.name, getVariableType(node.expression));
+        variableTypes.getLast().put(node.name.name, expressionTypeHelper.getVariableType(node.expression, variableTypes));
         checkChildNodes(node);
     }
 
@@ -203,51 +205,5 @@ public class Checker {
 
     private void checkColorLiteral(ColorLiteral node) {
         //skip
-    }
-
-    //--------------Helpers--------------
-
-    /**
-     * Returns the type of the given expression.
-     *
-     * @param expression The expression to get the type of.
-     * @see Expression
-     */
-    private ExpressionType getVariableType(Expression expression) {
-        if (expression instanceof VariableReference) {
-            return variableTypes.getLast().get(((VariableReference) expression).name);
-        } else if (expression instanceof Operation) {
-            return getOperationType((Operation) expression);
-        } else if (expression instanceof Literal) {
-            return getLiteralType((Literal) expression);
-        } else {
-            throw new UnsupportedOperationException("Unknown expression type: " + expression.getClass().getName());
-        }
-    }
-
-    private ExpressionType getOperationType(Operation operation) {
-        throw new UnsupportedOperationException("Not implemented");
-    }
-
-    /**
-     * Returns the type of the given literal.
-     *
-     * @param literal The literal to get the type of.
-     * @see Literal
-     */
-    private ExpressionType getLiteralType(Literal literal) {
-        if (literal instanceof PixelLiteral) {
-            return ExpressionType.PIXEL;
-        } else if (literal instanceof PercentageLiteral) {
-            return ExpressionType.PERCENTAGE;
-        } else if (literal instanceof ColorLiteral) {
-            return ExpressionType.COLOR;
-        } else if (literal instanceof ScalarLiteral) {
-            return ExpressionType.SCALAR;
-        } else if (literal instanceof BoolLiteral) {
-            return ExpressionType.BOOL;
-        }
-
-        throw new UnsupportedOperationException("Unknown literal type: " + literal.getClass().getName());
     }
 }
