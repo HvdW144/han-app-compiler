@@ -2,6 +2,7 @@ package nl.han.ica.icss.checker;
 
 import nl.han.ica.icss.ast.*;
 import nl.han.ica.icss.ast.literals.*;
+import nl.han.ica.icss.ast.operations.MultiplyOperation;
 import nl.han.ica.icss.ast.selectors.ClassSelector;
 import nl.han.ica.icss.ast.selectors.IdSelector;
 import nl.han.ica.icss.ast.selectors.TagSelector;
@@ -150,7 +151,17 @@ public class Checker {
 
     //--------------Expressions--------------
     private void checkOperation(Operation node) {
-        //TODO: check operand types
+        //TODO: might break on chained operations
+        if (node.lhs instanceof Literal && node.rhs instanceof Literal) {
+            if (!(node instanceof MultiplyOperation)) {
+                if (expressionTypeHelper.getVariableType(node.lhs, variableTypes) != expressionTypeHelper.getVariableType(node.rhs, variableTypes)) {
+                    node.setError("Operation between different types");
+                }
+            } else if (!(node.lhs instanceof ScalarLiteral || node.rhs instanceof ScalarLiteral)) {
+                node.setError("Multiply operations should contain at least one scalar");
+            }
+        }
+
         checkChildNodes(node);
     }
 
