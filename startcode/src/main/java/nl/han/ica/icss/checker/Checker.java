@@ -2,8 +2,6 @@ package nl.han.ica.icss.checker;
 
 import nl.han.ica.icss.ast.*;
 import nl.han.ica.icss.ast.literals.BoolLiteral;
-import nl.han.ica.icss.ast.literals.ColorLiteral;
-import nl.han.ica.icss.ast.literals.ScalarLiteral;
 import nl.han.ica.icss.ast.operations.MultiplyOperation;
 import nl.han.ica.icss.ast.selectors.ClassSelector;
 import nl.han.ica.icss.ast.selectors.IdSelector;
@@ -43,16 +41,14 @@ public class Checker {
             checkDeclaration((Declaration) node);
         } else if (node instanceof PropertyName) {
             checkPropertyName((PropertyName) node);
-        } else if (node instanceof Expression) {
-            checkExpression((Expression) node);
+        } else if (node instanceof Operation) {
+            checkOperation((Operation) node);
         } else if (node instanceof IfClause) {
             checkIfClause((IfClause) node);
         } else if (node instanceof ElseClause) {
             checkElseClause((ElseClause) node);
         } else if (node instanceof Selector) {
             checkSelectorNode((Selector) node);
-        } else {
-            System.out.println("Unknown node type: " + node.getClass().getName());
         }
     }
 
@@ -140,41 +136,31 @@ public class Checker {
     private void checkOperation(Operation node) {
         checkChildNodes(node);
 
-        //TODO: might break on chained operations
-        if ((node.lhs instanceof Literal || node.lhs instanceof VariableReference) && (node.rhs instanceof Literal || node.rhs instanceof VariableReference)) {
-            //check if no colors are used in operations
-            if (node.lhs instanceof ColorLiteral || node.rhs instanceof ColorLiteral) {
-                node.setError("Operations with colors are not allowed");
-                return;
-            }
-            if (node.lhs instanceof VariableReference) {
-                if (expressionTypeHelper.findVariableTypeOfReference((VariableReference) node.lhs, variableTypes) == ExpressionType.COLOR) {
-                    node.setError("Operations with colors are not allowed");
-                    return;
-                }
-            }
-            if (node.rhs instanceof VariableReference) {
-                if (expressionTypeHelper.findVariableTypeOfReference((VariableReference) node.rhs, variableTypes) == ExpressionType.COLOR) {
-                    node.setError("Operations with colors are not allowed");
-                    return;
-                }
-            }
+        ExpressionType leftType = expressionTypeHelper.getVariableType(node.lhs, variableTypes);
+        ExpressionType rightType = expressionTypeHelper.getVariableType(node.rhs, variableTypes);
 
-            //check if multiply operations contain at least one scalar
-            if (!(node instanceof MultiplyOperation)) {
-                if (expressionTypeHelper.getVariableType(node.lhs, variableTypes) != expressionTypeHelper.getVariableType(node.rhs, variableTypes)) {
-                    //TODO: gives double errors
-                    node.setError("Operation between different types");
-                }
-            } else if (!(node.lhs instanceof ScalarLiteral || node.rhs instanceof ScalarLiteral)) {
-                node.setError("Multiply operations should contain at least one scalar");
-            }
+        //check if no colors are used in operations
+        if (leftType == ExpressionType.COLOR || rightType == ExpressionType.COLOR) {
+            node.setError("Operations with colors are not allowed");
+            return;
         }
-    }
 
-    private void checkExpression(Expression node) {
-        checkChildNodes(node);
-        throw new UnsupportedOperationException("not implemented");
+        //check if no booleans are used in operations
+        if (leftType == ExpressionType.BOOL || rightType == ExpressionType.BOOL) {
+            node.setError("Operations with booleans are not allowed");
+            return;
+        }
+
+        //check if multiply operations contain at least one scalar
+        if (!(node instanceof MultiplyOperation)) {
+            if (leftType != rightType) {
+                //TODO: gives double errors
+                node.setError("Operation between different types");
+            }
+            //check if multiply operations contain at least one scalar
+        } else if (leftType != ExpressionType.SCALAR && rightType != ExpressionType.SCALAR) {
+            node.setError("Multiply operations should contain at least one scalar");
+        }
     }
 
     //--------------IF support--------------
