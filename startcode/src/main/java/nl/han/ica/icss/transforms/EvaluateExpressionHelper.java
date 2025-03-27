@@ -12,6 +12,7 @@ import nl.han.ica.icss.ast.operations.SubtractOperation;
 
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.ListIterator;
 
 public class EvaluateExpressionHelper {
     public Literal evalExpression(Expression expression, LinkedList<HashMap<String, Literal>> variableValues) {
@@ -19,7 +20,9 @@ public class EvaluateExpressionHelper {
             return (Literal) expression;
         } else if (expression instanceof VariableReference) {
             assert variableValues.peek() != null;
-            return variableValues.peek().get(((VariableReference) expression).name);
+            System.out.println(variableValues.peek().get(((VariableReference) expression).name));
+            System.out.println(variableValues.peek());
+            return findValueOfReference((VariableReference) expression, variableValues);
         } else if (expression instanceof AddOperation) {
             return evalAddOperation((AddOperation) expression, variableValues);
         } else if (expression instanceof SubtractOperation) {
@@ -91,4 +94,16 @@ public class EvaluateExpressionHelper {
         }
     }
 
+    public Literal findValueOfReference(VariableReference variableReference, LinkedList<HashMap<String, Literal>> variableTypes) {
+        ListIterator<HashMap<String, Literal>> iterator = variableTypes.listIterator(variableTypes.size());
+
+
+        while (iterator.hasPrevious()) {
+            HashMap<String, Literal> currentScope = iterator.previous();
+            if (currentScope.containsKey(variableReference.name)) {
+                return currentScope.get(variableReference.name);
+            }
+        }
+        return null;
+    }
 }

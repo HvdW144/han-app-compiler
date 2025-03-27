@@ -96,10 +96,6 @@ public class Evaluator implements Transform {
         applyChildNodes(node);
     }
 
-    private void applyOperation(Operation node) {
-        applyChildNodes(node);
-    }
-
     private void applyExpression(Expression node) {
         applyChildNodes(node);
     }
