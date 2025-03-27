@@ -30,6 +30,7 @@ public class Checker {
 
     private void checkNode(ASTNode node) {
         // TODO: make generic?
+        //TODO: add checkExpression
         if (node instanceof Stylesheet) {
             checkStylesheet((Stylesheet) node);
         } else if (node instanceof Stylerule) {

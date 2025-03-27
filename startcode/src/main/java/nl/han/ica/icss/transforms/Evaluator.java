@@ -45,8 +45,6 @@ public class Evaluator implements Transform {
             applyElseClause((ElseClause) node);
         } else if (node instanceof Selector) {
             applySelectorNode((Selector) node);
-        } else if (node instanceof Literal) {
-            applyLiteralNode((Literal) node);
         } else {
             System.out.println("Unknown node type: " + node.getClass().getName());
         }
