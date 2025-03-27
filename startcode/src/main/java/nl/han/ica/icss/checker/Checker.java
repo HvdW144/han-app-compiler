@@ -18,7 +18,6 @@ public class Checker {
 
     // teacher said we could use a normal linked list for this, so I changed it
     private LinkedList<HashMap<String, ExpressionType>> variableTypes;
-
     private final ExpressionTypeHelper expressionTypeHelper = new ExpressionTypeHelper();
 
     public void check(AST ast) {
@@ -190,6 +189,7 @@ public class Checker {
         //add scope
         variableTypes.add(new HashMap<>());
 
+        //TODO: fix double named variables in different scopes
         if (!(node.conditionalExpression instanceof BoolLiteral)) {
             if (node.conditionalExpression instanceof VariableReference) {
                 if (variableTypes.stream().anyMatch(scope -> scope.containsKey(((VariableReference) node.conditionalExpression).name))) {
