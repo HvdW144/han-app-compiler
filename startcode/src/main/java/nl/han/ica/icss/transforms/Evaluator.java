@@ -10,10 +10,6 @@ public class Evaluator implements Transform {
     private LinkedList<HashMap<String, Literal>> variableValues;
     private final EvaluateExpressionHelper evaluateExpressionHelper = new EvaluateExpressionHelper();
 
-    public Evaluator() {
-        //variableValues = new LinkedList<>();
-    }
-
     @Override
     public void apply(AST ast) {
         variableValues = new LinkedList<>();

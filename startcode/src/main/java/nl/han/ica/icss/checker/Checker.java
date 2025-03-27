@@ -1,7 +1,9 @@
 package nl.han.ica.icss.checker;
 
 import nl.han.ica.icss.ast.*;
-import nl.han.ica.icss.ast.literals.*;
+import nl.han.ica.icss.ast.literals.BoolLiteral;
+import nl.han.ica.icss.ast.literals.ColorLiteral;
+import nl.han.ica.icss.ast.literals.ScalarLiteral;
 import nl.han.ica.icss.ast.operations.MultiplyOperation;
 import nl.han.ica.icss.ast.selectors.ClassSelector;
 import nl.han.ica.icss.ast.selectors.IdSelector;
@@ -29,8 +31,6 @@ public class Checker {
     }
 
     private void checkNode(ASTNode node) {
-        // TODO: make generic?
-        //TODO: add checkExpression
         if (node instanceof Stylesheet) {
             checkStylesheet((Stylesheet) node);
         } else if (node instanceof Stylerule) {
@@ -43,16 +43,14 @@ public class Checker {
             checkDeclaration((Declaration) node);
         } else if (node instanceof PropertyName) {
             checkPropertyName((PropertyName) node);
-        } else if (node instanceof Operation) {
-            checkOperation((Operation) node);
+        } else if (node instanceof Expression) {
+            checkExpression((Expression) node);
         } else if (node instanceof IfClause) {
             checkIfClause((IfClause) node);
         } else if (node instanceof ElseClause) {
             checkElseClause((ElseClause) node);
         } else if (node instanceof Selector) {
             checkSelectorNode((Selector) node);
-        } else if (node instanceof Literal) {
-            checkLiteralNode((Literal) node);
         } else {
             System.out.println("Unknown node type: " + node.getClass().getName());
         }
@@ -70,22 +68,11 @@ public class Checker {
         }
     }
 
-    private void checkLiteralNode(Literal node) {
-        if (node instanceof PixelLiteral) {
-            checkPixelLiteral((PixelLiteral) node);
-        } else if (node instanceof PercentageLiteral) {
-            checkPercentageLiteral((PercentageLiteral) node);
-        } else if (node instanceof ColorLiteral) {
-            checkColorLiteral((ColorLiteral) node);
-        } else if (node instanceof ScalarLiteral) {
-            checkScalarLiteral((ScalarLiteral) node);
-        } else if (node instanceof BoolLiteral) {
-            checkBoolLiteral((BoolLiteral) node);
-        } else {
-            System.out.println("Unknown literal type: " + node.getClass().getName());
-        }
-    }
-
+    /**
+     * Check all child nodes of the given node.
+     *
+     * @param node The node to check the children of.
+     */
     private void checkChildNodes(ASTNode node) {
         for (ASTNode child : node.getChildren()) {
             checkNode(child);
@@ -185,6 +172,11 @@ public class Checker {
         }
     }
 
+    private void checkExpression(Expression node) {
+        checkChildNodes(node);
+        throw new UnsupportedOperationException("not implemented");
+    }
+
     //--------------IF support--------------
     private void checkIfClause(IfClause node) {
         //add scope
@@ -216,26 +208,5 @@ public class Checker {
 
         //remove scope
         variableTypes.removeLast();
-    }
-
-    //--------------Literals--------------
-    private void checkBoolLiteral(BoolLiteral node) {
-        //skip
-    }
-
-    private void checkPixelLiteral(PixelLiteral node) {
-        //skip
-    }
-
-    private void checkPercentageLiteral(PercentageLiteral node) {
-        //skip
-    }
-
-    private void checkScalarLiteral(ScalarLiteral node) {
-        //skip
-    }
-
-    private void checkColorLiteral(ColorLiteral node) {
-        //skip
     }
 }
