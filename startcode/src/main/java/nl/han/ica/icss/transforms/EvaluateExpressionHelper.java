@@ -66,13 +66,27 @@ public class EvaluateExpressionHelper {
         Literal left = evalExpression(operation.lhs, variableValues);
         Literal right = evalExpression(operation.rhs, variableValues);
 
+        // Pixel
         if (left instanceof PixelLiteral && right instanceof ScalarLiteral) {
             return new PixelLiteral(((PixelLiteral) left).value * ((ScalarLiteral) right).value);
-        } else if (left instanceof PercentageLiteral && right instanceof ScalarLiteral) {
+        }
+        if (left instanceof ScalarLiteral && right instanceof PixelLiteral) {
+            return new PixelLiteral(((ScalarLiteral) left).value * ((PixelLiteral) right).value);
+        }
+
+        // Percentage
+        if (left instanceof PercentageLiteral && right instanceof ScalarLiteral) {
             return new PercentageLiteral(((PercentageLiteral) left).value * ((ScalarLiteral) right).value);
-        } else if (left instanceof ScalarLiteral && right instanceof ScalarLiteral) {
+        }
+        if (left instanceof ScalarLiteral && right instanceof PercentageLiteral) {
+            return new PercentageLiteral(((ScalarLiteral) left).value * ((PercentageLiteral) right).value);
+        }
+
+        // Scalar
+        if (left instanceof ScalarLiteral && right instanceof ScalarLiteral) {
             return new ScalarLiteral(((ScalarLiteral) left).value * ((ScalarLiteral) right).value);
         } else {
+            operation.setError("Invalid multiply operation (checker should have caught this)");
             return null;
         }
     }
