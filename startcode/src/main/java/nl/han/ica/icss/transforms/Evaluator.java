@@ -35,8 +35,6 @@ public class Evaluator implements Transform {
             applyDeclaration((Declaration) node);
         } else if (node instanceof PropertyName) {
             applyPropertyName((PropertyName) node);
-        } else if (node instanceof Operation) {
-            applyOperation((Operation) node);
         } else if (node instanceof Expression) {
             applyExpression((Expression) node);
         } else if (node instanceof IfClause) {
@@ -80,10 +78,8 @@ public class Evaluator implements Transform {
     }
 
     private void applyVariableAssignment(VariableAssignment node) {
-        variableValues.getLast().put(
-                node.name.name,
-                evaluateExpressionHelper.evalExpression(node.expression, variableValues
-                ));
+        node.expression = evaluateExpressionHelper.evalExpression(node.expression, variableValues);
+        variableValues.getLast().put(node.name.name, (Literal) node.expression);
         applyChildNodes(node);
     }
 
