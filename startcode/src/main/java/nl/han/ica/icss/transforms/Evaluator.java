@@ -37,6 +37,8 @@ public class Evaluator implements Transform {
             applyPropertyName((PropertyName) node);
         } else if (node instanceof Operation) {
             applyOperation((Operation) node);
+        } else if (node instanceof Expression) {
+            applyExpression((Expression) node);
         } else if (node instanceof IfClause) {
             applyIfClause((IfClause) node);
         } else if (node instanceof ElseClause) {
@@ -95,6 +97,7 @@ public class Evaluator implements Transform {
     }
 
     private void applyDeclaration(Declaration node) {
+        node.expression = evaluateExpressionHelper.evalExpression(node.expression, variableValues);
         applyChildNodes(node);
     }
 
@@ -106,11 +109,28 @@ public class Evaluator implements Transform {
         applyChildNodes(node);
     }
 
-    private void applyIfClause(IfClause node) {
+    private void applyExpression(Expression node) {
         applyChildNodes(node);
     }
 
-    private void applyElseClause(ElseClause node) {
+    //--------------IF support--------------
+    private void applyIfClause(IfClause node) {
+        //add scope
+        variableValues.push(new HashMap<>());
+
         applyChildNodes(node);
+
+        //remove scope
+        variableValues.removeLast();
+    }
+
+    private void applyElseClause(ElseClause node) {
+        //add scope
+        variableValues.push(new HashMap<>());
+
+        applyChildNodes(node);
+
+        //remove scope
+        variableValues.removeLast();
     }
 }

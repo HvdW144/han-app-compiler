@@ -1,4 +1,4 @@
-﻿package nl.han.ica.icss.transforms;
+package nl.han.ica.icss.transforms;
 
 import nl.han.ica.icss.ast.Expression;
 import nl.han.ica.icss.ast.Literal;
