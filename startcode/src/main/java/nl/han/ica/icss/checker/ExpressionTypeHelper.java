@@ -5,6 +5,9 @@ import nl.han.ica.icss.ast.Literal;
 import nl.han.ica.icss.ast.Operation;
 import nl.han.ica.icss.ast.VariableReference;
 import nl.han.ica.icss.ast.literals.*;
+import nl.han.ica.icss.ast.operations.AddOperation;
+import nl.han.ica.icss.ast.operations.MultiplyOperation;
+import nl.han.ica.icss.ast.operations.SubtractOperation;
 import nl.han.ica.icss.ast.types.ExpressionType;
 
 import java.util.HashMap;
@@ -23,7 +26,7 @@ public class ExpressionTypeHelper {
         if (expression instanceof VariableReference) {
             return findVariableTypeOfReference((VariableReference) expression, variableTypes);
         } else if (expression instanceof Operation) {
-            return getOperationType((Operation) expression);
+            return getOperationType((Operation) expression, variableTypes);
         } else if (expression instanceof Literal) {
             return getLiteralType((Literal) expression);
         } else {
@@ -31,8 +34,24 @@ public class ExpressionTypeHelper {
         }
     }
 
-    private ExpressionType getOperationType(Operation operation) {
-        throw new UnsupportedOperationException("Not implemented");
+    /**
+     * Returns the type of the given operation.
+     *
+     * @param operation     The operation to get the type of.
+     * @param variableTypes The variable types to use when determining the type of a variable reference.
+     * @return The type of the operation.
+     */
+    private ExpressionType getOperationType(Operation operation, LinkedList<HashMap<String, ExpressionType>> variableTypes) {
+        ExpressionType left = getVariableType(operation.lhs, variableTypes);
+        ExpressionType right = getVariableType(operation.rhs, variableTypes);
+
+        if (operation instanceof AddOperation || operation instanceof SubtractOperation) {
+            return left;
+        } else if (operation instanceof MultiplyOperation) {
+            return left != ExpressionType.SCALAR ? left : right;
+        } else {
+            throw new UnsupportedOperationException("Unknown operation type: " + operation.getClass().getName());
+        }
     }
 
     /**

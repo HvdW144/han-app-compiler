@@ -53,9 +53,6 @@ public class Evaluator implements Transform {
     private void applySelectorNode(Selector selector) {
     }
 
-    private void applyLiteralNode(Literal literal) {
-    }
-
     private void applyChildNodes(ASTNode node) {
         for (ASTNode child : node.getChildren()) {
             applyNode(child);
