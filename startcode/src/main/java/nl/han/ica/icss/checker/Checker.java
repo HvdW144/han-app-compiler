@@ -3,9 +3,6 @@ package nl.han.ica.icss.checker;
 import nl.han.ica.icss.ast.*;
 import nl.han.ica.icss.ast.literals.BoolLiteral;
 import nl.han.ica.icss.ast.operations.MultiplyOperation;
-import nl.han.ica.icss.ast.selectors.ClassSelector;
-import nl.han.ica.icss.ast.selectors.IdSelector;
-import nl.han.ica.icss.ast.selectors.TagSelector;
 import nl.han.ica.icss.ast.types.ExpressionType;
 
 import java.util.Arrays;
@@ -52,18 +49,6 @@ public class Checker {
         }
     }
 
-    private void checkSelectorNode(Selector node) {
-        if (node instanceof TagSelector) {
-            checkTagSelector((TagSelector) node);
-        } else if (node instanceof ClassSelector) {
-            checkClassSelector((ClassSelector) node);
-        } else if (node instanceof IdSelector) {
-            checkIdSelector((IdSelector) node);
-        } else {
-            System.out.println("Unknown selector type: " + node.getClass().getName());
-        }
-    }
-
     /**
      * Check all child nodes of the given node.
      *
@@ -105,7 +90,6 @@ public class Checker {
         if (variableTypes.stream().noneMatch(scope -> scope.containsKey(node.name))) {
             node.setError("Variable " + node.name + " not declared");
         }
-        checkChildNodes(node);
     }
 
     //--------------Declarations--------------
@@ -120,16 +104,8 @@ public class Checker {
     }
 
     //--------------Selectors--------------
-    private void checkTagSelector(TagSelector node) {
-        //skip
-    }
-
-    private void checkClassSelector(ClassSelector node) {
-        //skip
-    }
-
-    private void checkIdSelector(IdSelector node) {
-        //skip
+    private void checkSelectorNode(Selector node) {
+        //skip all selectors
     }
 
     //--------------Expressions--------------
