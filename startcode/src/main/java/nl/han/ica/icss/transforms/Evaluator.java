@@ -55,7 +55,7 @@ public class Evaluator implements Transform {
 
     private void applyStylesheet(Stylesheet node) {
         //add scope
-        variableValues.push(new HashMap<>());
+        variableValues.add(new HashMap<>());
 
         applyChildNodes(node);
 
@@ -65,7 +65,7 @@ public class Evaluator implements Transform {
 
     private void applyStylerule(Stylerule node) {
         //add scope
-        variableValues.push(new HashMap<>());
+        variableValues.add(new HashMap<>());
 
         applyChildNodes(node);
 
@@ -99,7 +99,7 @@ public class Evaluator implements Transform {
     //--------------IF support--------------
     private void applyIfClause(IfClause node) {
         //add scope
-        variableValues.push(new HashMap<>());
+        variableValues.add(new HashMap<>());
 
         applyChildNodes(node);
 
@@ -109,7 +109,7 @@ public class Evaluator implements Transform {
 
     private void applyElseClause(ElseClause node) {
         //add scope
-        variableValues.push(new HashMap<>());
+        variableValues.add(new HashMap<>());
 
         applyChildNodes(node);
 
