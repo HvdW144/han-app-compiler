@@ -20,8 +20,6 @@ public class EvaluateExpressionHelper {
             return (Literal) expression;
         } else if (expression instanceof VariableReference) {
             assert variableValues.peek() != null;
-            System.out.println(variableValues.peek().get(((VariableReference) expression).name));
-            System.out.println(variableValues.peek());
             return findValueOfReference((VariableReference) expression, variableValues);
         } else if (expression instanceof AddOperation) {
             return evalAddOperation((AddOperation) expression, variableValues);

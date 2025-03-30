@@ -1,7 +1,9 @@
 package nl.han.ica.icss.transforms;
 
 import nl.han.ica.icss.ast.*;
+import nl.han.ica.icss.ast.literals.BoolLiteral;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -15,10 +17,10 @@ public class Evaluator implements Transform {
         variableValues = new LinkedList<>();
 
         //start applying from the root node
-        applyNode(ast.root);
+        applyNode(ast.root, null);
     }
 
-    private void applyNode(ASTNode node) {
+    private void applyNode(ASTNode node, ASTNode parentNode) {
         if (node instanceof Stylesheet) {
             applyStylesheet((Stylesheet) node);
         } else if (node instanceof Stylerule) {
@@ -34,7 +36,7 @@ public class Evaluator implements Transform {
         } else if (node instanceof Expression) {
             applyExpression((Expression) node);
         } else if (node instanceof IfClause) {
-            applyIfClause((IfClause) node);
+            applyIfClause((IfClause) node, parentNode);
         } else if (node instanceof ElseClause) {
             applyElseClause((ElseClause) node);
         } else if (node instanceof Selector) {
@@ -47,9 +49,9 @@ public class Evaluator implements Transform {
     private void applySelectorNode(Selector selector) {
     }
 
-    private void applyChildNodes(ASTNode node) {
-        for (ASTNode child : node.getChildren()) {
-            applyNode(child);
+    private void applyChildNodes(ASTNode parentNode) {
+        for (ASTNode child : parentNode.getChildren()) {
+            applyNode(child, parentNode);
         }
     }
 
@@ -97,11 +99,30 @@ public class Evaluator implements Transform {
     }
 
     //--------------IF support--------------
-    private void applyIfClause(IfClause node) {
+    private void applyIfClause(IfClause node, ASTNode parentNode) {
+        BoolLiteral result = (BoolLiteral) evaluateExpressionHelper.evalExpression(node.conditionalExpression, variableValues);
+
+        if (result.value) {
+            node.elseClause = null;
+        } else {
+            if (node.elseClause != null) {
+                node.body = node.elseClause.body;
+            } else {
+                node.body = new ArrayList<>();
+            }
+        }
+
         //add scope
         variableValues.add(new HashMap<>());
 
         applyChildNodes(node);
+
+        //broken
+        for (ASTNode child : node.body) {
+            parentNode.addChild(child);
+        }
+
+        parentNode.removeChild(node);
 
         //remove scope
         variableValues.removeLast();
