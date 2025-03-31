@@ -24,9 +24,7 @@ public class Generator {
             resultString.append(generateStylerule((Stylerule) node));
         } else if (node instanceof Declaration) {
             resultString.append(generateDeclaration((Declaration) node));
-        } else if (node instanceof PropertyName) {
-            resultString.append(generatePropertyName((PropertyName) node));
-        } else if (node instanceof Literal) {
+        } else if (node instanceof Expression) {
             resultString.append(generateExpression((Expression) node));
         } else if (node instanceof Selector) {
             resultString.append(generateSelectorNode((Selector) node));
@@ -61,15 +59,11 @@ public class Generator {
 
     private String generateDeclaration(Declaration node) {
         StringBuilder resultString = new StringBuilder();
-        resultString.append(generatePropertyName(node.property));
+        resultString.append(node.property.name);
         resultString.append(": ");
         resultString.append(generateExpression(node.expression));
         resultString.append(";\n");
         return resultString.toString();
-    }
-
-    private String generatePropertyName(PropertyName node) {
-        return node.name;
     }
 
     private String generateExpression(Expression node) {
