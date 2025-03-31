@@ -51,6 +51,8 @@ public class Generator {
         }
         resultString.append(" {\n");
         for (ASTNode child : node.body) {
+            //indenting
+            resultString.append("\t");
             resultString.append(generateNode(child));
         }
         resultString.append("}\n\n");
