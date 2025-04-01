@@ -130,7 +130,6 @@ public class Checker {
         //check if multiply operations contain at least one scalar
         if (!(node instanceof MultiplyOperation)) {
             if (leftType != rightType) {
-                //TODO: gives double errors
                 node.setError("Operation between different types");
             }
             //check if multiply operations contain at least one scalar
