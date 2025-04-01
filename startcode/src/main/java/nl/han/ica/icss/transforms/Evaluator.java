@@ -47,6 +47,7 @@ public class Evaluator implements Transform {
     }
 
     private void applySelectorNode(Selector selector) {
+        //skip
     }
 
     private void applyChildNodes(ASTNode parentNode) {
@@ -82,7 +83,7 @@ public class Evaluator implements Transform {
     }
 
     private void applyVariableReference(VariableReference node) {
-        applyChildNodes(node);
+        //skip
     }
 
     private void applyDeclaration(Declaration node) {
@@ -91,7 +92,7 @@ public class Evaluator implements Transform {
     }
 
     private void applyPropertyName(PropertyName node) {
-        applyChildNodes(node);
+        //skip
     }
 
     private void applyExpression(Expression node) {
