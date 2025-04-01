@@ -7,6 +7,7 @@ import nl.han.ica.icss.ast.types.ExpressionType;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 
 
@@ -82,6 +83,11 @@ public class Checker {
 
     //--------------Variables--------------
     private void checkVariableAssignment(VariableAssignment node) {
+        //check if variable is already declared in scope
+        if (variableTypes.getLast().containsKey(node.name.name)) {
+            node.setError("Variable " + node.name.name + " already declared within scope");
+        }
+
         variableTypes.getLast().put(node.name.name, expressionTypeHelper.getVariableType(node.expression, variableTypes));
         checkChildNodes(node);
     }
@@ -143,14 +149,18 @@ public class Checker {
         //add scope
         variableTypes.add(new HashMap<>());
 
-        //TODO: fix double named variables in different scopes
         if (!(node.conditionalExpression instanceof BoolLiteral)) {
             if (node.conditionalExpression instanceof VariableReference) {
-                if (variableTypes.stream().anyMatch(scope -> scope.containsKey(((VariableReference) node.conditionalExpression).name))) {
-                    if (variableTypes.stream().noneMatch(scope -> scope.get(((VariableReference) node.conditionalExpression).name) == ExpressionType.BOOL)) {
-                        node.setError("Variable " + ((VariableReference) node.conditionalExpression).name + " is not a boolean");
+                for (Iterator<HashMap<String, ExpressionType>> it = variableTypes.descendingIterator(); it.hasNext(); ) {
+                    HashMap<String, ExpressionType> scope = it.next();
+                    if (scope.containsKey(((VariableReference) node.conditionalExpression).name)) {
+                        if (scope.get(((VariableReference) node.conditionalExpression).name) != ExpressionType.BOOL) {
+                            node.setError("Variable " + ((VariableReference) node.conditionalExpression).name + " is not a boolean");
+                        }
+                        break; // Stop at the first found scope
                     }
                 }
+
             } else {
                 node.setError("Conditional expression is not a boolean");
             }
