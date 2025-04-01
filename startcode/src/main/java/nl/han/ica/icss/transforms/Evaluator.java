@@ -103,6 +103,7 @@ public class Evaluator implements Transform {
     private void applyIfClause(IfClause node, ASTNode parentNode) {
         BoolLiteral result = (BoolLiteral) evaluateExpressionHelper.evalExpression(node.conditionalExpression, variableValues);
 
+        //TODO: nested if statements not working
         if (result.value) {
             node.elseClause = null;
         } else {
@@ -118,7 +119,6 @@ public class Evaluator implements Transform {
 
         applyChildNodes(node);
 
-        //broken
         for (ASTNode child : node.body) {
             parentNode.addChild(child);
         }
