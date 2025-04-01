@@ -48,8 +48,6 @@ public class Generator {
         }
         resultString.append(" {\n");
         for (ASTNode child : node.body) {
-            //indenting
-            resultString.append("\t");
             resultString.append(generateNode(child));
         }
         resultString.append("}\n\n");
@@ -58,6 +56,8 @@ public class Generator {
 
     private String generateDeclaration(Declaration node) {
         StringBuilder resultString = new StringBuilder();
+        //indenting
+        resultString.append("\t");
         resultString.append(node.property.name);
         resultString.append(": ");
         resultString.append(generateExpression(node.expression));
