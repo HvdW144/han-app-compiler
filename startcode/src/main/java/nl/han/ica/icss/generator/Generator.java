@@ -43,10 +43,12 @@ public class Generator {
     private String generateStylerule(Stylerule node) {
         StringBuilder resultString = new StringBuilder();
         //only one selector working
+        //results in: "selector {"
         for (Selector selector : node.selectors) {
             resultString.append(generateSelectorNode(selector));
         }
         resultString.append(" {\n");
+        //results in: "property: expression;}"
         for (ASTNode child : node.body) {
             resultString.append(generateNode(child));
         }
@@ -58,6 +60,7 @@ public class Generator {
         StringBuilder resultString = new StringBuilder();
         //indenting
         resultString.append("\t");
+        //results in: "property: expression;"
         resultString.append(node.property.name);
         resultString.append(": ");
         resultString.append(generateExpression(node.expression));
