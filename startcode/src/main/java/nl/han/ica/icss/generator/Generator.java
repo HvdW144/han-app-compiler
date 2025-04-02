@@ -42,7 +42,7 @@ public class Generator {
 
     private String generateStylerule(Stylerule node) {
         StringBuilder resultString = new StringBuilder();
-        //TODO: only one selector working for now
+        //only one selector working
         for (Selector selector : node.selectors) {
             resultString.append(generateSelectorNode(selector));
         }

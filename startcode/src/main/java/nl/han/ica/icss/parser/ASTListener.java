@@ -37,7 +37,6 @@ public class ASTListener extends ICSSBaseListener {
     public void exitStylesheet(ICSSParser.StylesheetContext ctx) {
         ASTNode current = currentContainer.pop();
         ast = new AST((Stylesheet) current);
-//		super.exitStylesheet(ctx); //not working?
     }
 
     @Override
