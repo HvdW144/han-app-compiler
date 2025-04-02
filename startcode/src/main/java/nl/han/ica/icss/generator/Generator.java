@@ -59,7 +59,7 @@ public class Generator {
     private String generateDeclaration(Declaration node) {
         StringBuilder resultString = new StringBuilder();
         //indenting
-        resultString.append("\t");
+        resultString.append("  ");
         //results in: "property: expression;"
         resultString.append(node.property.name);
         resultString.append(": ");
