@@ -88,6 +88,7 @@ public class Checker {
             node.setError("Variable " + node.name.name + " already declared within scope");
         }
 
+        //otherwise add the variable to the current scope
         variableTypes.getLast().put(node.name.name, expressionTypeHelper.getVariableType(node.expression, variableTypes));
         checkChildNodes(node);
     }
@@ -133,7 +134,7 @@ public class Checker {
             return;
         }
 
-        //check if multiply operations contain at least one scalar
+        //check if types are the same
         if (!(node instanceof MultiplyOperation)) {
             if (leftType != rightType) {
                 node.setError("Operation between different types");
