@@ -7,7 +7,6 @@ import nl.han.ica.icss.ast.types.ExpressionType;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 
 
@@ -17,6 +16,7 @@ public class Checker {
     // teacher said we could use a normal linked list for this, so I changed it
     private LinkedList<HashMap<String, ExpressionType>> variableTypes;
     private final ExpressionTypeHelper expressionTypeHelper = new ExpressionTypeHelper();
+    private final IfCheckHelper ifCheckHelper = new IfCheckHelper();
 
     public void check(AST ast) {
         // clean up the variableTypes list
@@ -152,16 +152,7 @@ public class Checker {
 
         if (!(node.conditionalExpression instanceof BoolLiteral)) {
             if (node.conditionalExpression instanceof VariableReference) {
-                for (Iterator<HashMap<String, ExpressionType>> it = variableTypes.descendingIterator(); it.hasNext(); ) {
-                    HashMap<String, ExpressionType> scope = it.next();
-                    if (scope.containsKey(((VariableReference) node.conditionalExpression).name)) {
-                        if (scope.get(((VariableReference) node.conditionalExpression).name) != ExpressionType.BOOL) {
-                            node.setError("Variable " + ((VariableReference) node.conditionalExpression).name + " is not a boolean");
-                        }
-                        break; // Stop at the first found scope
-                    }
-                }
-
+                ifCheckHelper.checkVariableReferenceInScopes(node, variableTypes);
             } else {
                 node.setError("Conditional expression is not a boolean");
             }
