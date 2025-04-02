@@ -47,7 +47,7 @@ public class Evaluator implements Transform {
     }
 
     private void applySelectorNode(Selector selector) {
-        //skip
+        //skip all selectors
     }
 
     private void applyChildNodes(ASTNode parentNode) {
@@ -77,8 +77,11 @@ public class Evaluator implements Transform {
     }
 
     private void applyVariableAssignment(VariableAssignment node) {
+        //evaluate expression
         node.expression = evaluateExpressionHelper.evalExpression(node.expression, variableValues);
+        //add variable value to the last scope
         variableValues.getLast().put(node.name.name, (Literal) node.expression);
+
         applyChildNodes(node);
     }
 
@@ -87,7 +90,9 @@ public class Evaluator implements Transform {
     }
 
     private void applyDeclaration(Declaration node) {
+        //evaluate expression
         node.expression = evaluateExpressionHelper.evalExpression(node.expression, variableValues);
+
         applyChildNodes(node);
     }
 
